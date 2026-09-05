@@ -1,0 +1,73 @@
+"""Estado operativo de un libro."""
+enum EstadoLibro {
+  DISPONIBLE
+  PRESTADO
+  MANTENIMIENTO
+}
+
+type Autor {
+  id: ID!
+  nombre: String!
+  nacionalidad: String
+  """Libros asociados; siempre devuelve una lista, aunque esté vacía."""
+  libros: [Libro!]!
+}
+
+type Libro {
+  id: ID!
+  titulo: String!
+  descripcion: String
+  anioPublicacion: Int
+  estado: EstadoLibro!
+  autor: Autor!
+}
+
+type PageInfo {
+  page: Int!
+  limit: Int!
+  totalItems: Int!
+  totalPages: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type LibroConnection {
+  items: [Libro!]!
+  pageInfo: PageInfo!
+}
+
+input CrearLibroInput {
+  titulo: String!
+  descripcion: String
+  anioPublicacion: Int
+  autorId: ID!
+}
+
+input ActualizarLibroInput {
+  titulo: String
+  descripcion: String
+  anioPublicacion: Int
+  estado: EstadoLibro
+}
+
+input FiltroLibrosInput {
+  estado: EstadoLibro
+  autorId: ID
+  titulo: String
+}
+
+type Query {
+  """Obtiene un libro mediante su identificador."""
+  libro(id: ID!): Libro
+
+  """Lista libros aplicando filtros y paginación."""
+  libros(filtro: FiltroLibrosInput, page: Int = 1, limit: Int = 10): LibroConnection!
+}
+
+type Mutation {
+  """Crea un libro en estado DISPONIBLE."""
+  crearLibro(input: CrearLibroInput!): Libro!
+
+  """Actualiza parcialmente un libro existente."""
+  actualizarLibro(id: ID!, input: ActualizarLibroInput!): Libro!
+}

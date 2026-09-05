@@ -1,0 +1,62 @@
+query ObtenerLibro($id: ID!) {
+  libro(id: $id) {
+    id
+    titulo
+    descripcion
+    estado
+    autor {
+      id
+      nombre
+    }
+  }
+}
+
+query ListarLibros($filtro: FiltroLibrosInput, $page: Int!, $limit: Int!) {
+  libros(filtro: $filtro, page: $page, limit: $limit) {
+    items {
+      id
+      titulo
+      estado
+      autor {
+        nombre
+      }
+    }
+    pageInfo {
+      page
+      limit
+      totalItems
+      totalPages
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+mutation CrearNuevoLibro($input: CrearLibroInput!) {
+  crearLibro(input: $input) {
+    id
+    titulo
+    estado
+    autor {
+      nombre
+    }
+  }
+}
+
+mutation CambiarEstadoLibro($id: ID!, $input: ActualizarLibroInput!) {
+  actualizarLibro(id: $id, input: $input) {
+    id
+    titulo
+    estado
+  }
+}
+
+mutation ActualizarDatosLibro($id: ID!, $input: ActualizarLibroInput!) {
+  actualizarLibro(id: $id, input: $input) {
+    id
+    titulo
+    descripcion
+    anioPublicacion
+    estado
+  }
+}
