@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { GraphQLError } from 'graphql';
 import { createYoga } from 'graphql-yoga';
-import { LibraryStore } from './data/store.js';
+import { PostgresBookRepository, type BookRepository } from './data/book.repository.js';
+import { createDatabase } from './data/database.js';
 import { createAuthorLoader, type BatchLogger } from './loaders/author.loader.js';
 import { resolvers } from './schema/resolvers.js';
 import { BookService } from './services/book.service.js';
@@ -28,12 +29,12 @@ function maskInternalError(error: unknown, message: string): Error {
 }
 
 export interface AppOptions {
-  store?: LibraryStore;
+  repository?: BookRepository;
   onAuthorBatch?: BatchLogger;
 }
 
 export function createLibraryYoga(options: AppOptions = {}) {
-  const libraryStore = options.store ?? new LibraryStore();
+  const repository = options.repository ?? new PostgresBookRepository(createDatabase(process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/library').db);
   const onAuthorBatch = options.onAuthorBatch ?? ((ids: readonly string[]) => {
     console.info(`[AuthorLoader] batch requested: ${JSON.stringify(ids)}`);
   });
@@ -48,9 +49,9 @@ export function createLibraryYoga(options: AppOptions = {}) {
       maskError: maskInternalError
     },
     context: () => ({
-      store: libraryStore,
-      bookService: new BookService(libraryStore),
-      authorsById: createAuthorLoader(libraryStore, onAuthorBatch)
+      repository,
+      bookService: new BookService(repository),
+      authorsById: createAuthorLoader(repository, onAuthorBatch)
     })
   });
 }
