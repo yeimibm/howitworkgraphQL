@@ -1,10 +1,10 @@
 import type DataLoader from 'dataloader';
-import type { LibraryStore } from '../data/store.js';
+import type { BookRepository } from '../data/book.repository.js';
 import type { AuthorRecord, BookFilterInput, BookRecord, CreateBookInput, UpdateBookInput } from '../types/domain.js';
 import type { BookService } from '../services/book.service.js';
 
 export interface GraphQLContext {
-  store: LibraryStore;
+  repository: BookRepository;
   bookService: BookService;
   authorsById: DataLoader<string, AuthorRecord>;
 }
@@ -32,6 +32,6 @@ export const resolvers = {
   },
   Autor: {
     libros: (author: AuthorRecord, _args: unknown, context: GraphQLContext) =>
-      context.store.books.filter((book) => book.autorId === author.id)
+      context.repository.findBooksByAuthor(author.id)
   }
 };
