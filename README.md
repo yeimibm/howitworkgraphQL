@@ -13,7 +13,7 @@ npm run db:migrate
 npm run dev
 ```
 
-La conexión predeterminada es `postgres://postgres:postgres@localhost:5432/library`. Se puede reemplazar mediante `DATABASE_URL`. `db:migrate` aplica las migraciones pendientes y carga los datos de ejemplo de forma idempotente.
+La conexión predeterminada es `postgres://postgres:postgres@localhost:55432/library`. Docker Compose publica PostgreSQL en el puerto 55432 del equipo para evitar conflictos con instalaciones locales que usan el 5432. Se puede reemplazar mediante `DATABASE_URL`. `db:migrate` aplica las migraciones pendientes y carga los datos de ejemplo de forma idempotente.
 
 GraphiQL queda disponible en `http://localhost:4000/graphql`. Para ejecutar el código compilado:
 

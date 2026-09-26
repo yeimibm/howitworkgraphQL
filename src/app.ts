@@ -34,7 +34,7 @@ export interface AppOptions {
 }
 
 export function createLibraryYoga(options: AppOptions = {}) {
-  const repository = options.repository ?? new PostgresBookRepository(createDatabase(process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/library').db);
+  const repository = options.repository ?? new PostgresBookRepository(createDatabase(process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:55432/library').db);
   const onAuthorBatch = options.onAuthorBatch ?? ((ids: readonly string[]) => {
     console.info(`[AuthorLoader] batch requested: ${JSON.stringify(ids)}`);
   });
