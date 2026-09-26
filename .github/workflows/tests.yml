@@ -18,7 +18,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies from lockfile
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Unit tests
         run: npm run test:unit
